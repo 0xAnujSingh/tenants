@@ -1,0 +1,36 @@
+{
+  "Tenant":[
+  {
+      "RoomNo" : 1, 
+      "Name":"Anuj singh solanki",
+      "DateOfJoining" : "18-8-2023",
+      "TillOneMonth": "18-9-2023",
+      "Rent": 3000,
+      "PresentUnit" : 2020,
+      "PreviousUnit" : 2000,
+      "Unit": 20,
+      "Total": 3200
+  },
+  {
+      "RoomNo" : 2, 
+      "Name":"Bhojraj",
+      "DateOfJoining" : "1-1-2023",
+      "TillOneMonth": "1-2-2023",
+      "Rent": 3000,
+      "PresentUnit" : 2020,
+      "PreviousUnit" : 2000,
+      "Unit": 20,
+      "Total": 3200
+  },
+  {
+      "RoomNo" : 3, 
+      "Name":"Ajay pal",
+      "DateOfJoining" : "2-2-2023",
+      "TillOneMonth": "2-3-2023",
+      "Rent": 2000,
+      "PresentUnit" : 30,
+      "PreviousUnit" : 0,
+      "Unit": 30,
+      "Total": 3300
+  }
+]}
