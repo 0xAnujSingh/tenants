@@ -13,7 +13,7 @@ import Update from "./components/Update";
 
 const App = () => {
   const [userName, setUserName] = useState("");
-  
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
@@ -25,12 +25,10 @@ const App = () => {
     });
   }, []);
 
-
   return (
     <div>
-      
       <BrowserRouter>
-      <Header />
+        <Header />
         <Routes>
           <Route path="home" element={<Home name={userName} />}></Route>
           <Route path="postdata" element={<Postdata />}></Route>
@@ -40,8 +38,8 @@ const App = () => {
           <Route path="signup" element={<Signup />}></Route>
           <Route path="/update/:id" element={<Update />}></Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </div>
   );
 };

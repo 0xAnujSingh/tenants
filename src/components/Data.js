@@ -10,7 +10,6 @@ const Data = () => {
 
   useEffect(() => {
     getTenant();
-    
   }, []);
 
   const getTenant = async () => {
@@ -21,12 +20,11 @@ const Data = () => {
 
   const getTenantById = async (id) => {
     const data = await TenantDataService.getTenantById(id);
-    console.log(id);
+    console.log(data.data());
+    
 
-    console.log(data)
-    navigate("/update/:id")
+    navigate(`/update/${id}`, { state: { tenant: data.data() } }); 
     // console.log(data.docs)
-
   };
 
   const handleDelete = async (id) => {
@@ -98,13 +96,15 @@ const Data = () => {
                   <td>{te.Unit}</td>
                   <td>{te.Total}</td>
                   <td>
-                  <button onClick={(e) => handleDelete(te.id)}>Delete</button>
+                    <button onClick={(e) => handleDelete(te.id)}>Delete</button>
                   </td>
                   <td>
-                    <button>
-                  <Link to={`/update/${te.id}`}>Update</Link>
-                  </button>
-                  {/* <button onClick={(e) => getTenantById(te.id)}>Update</button> */}
+                    {/* <button>
+                      <Link to={`/update/${te.id}`}>Update</Link>
+                    </button> */}
+                    <button onClick={(e) => getTenantById(te.id)}>
+                      Update
+                    </button>
                   </td>
                 </tr>
               );

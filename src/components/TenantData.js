@@ -16,7 +16,9 @@ class TenantDataService {
   };
 
   updateTenant = (id, updateTenant) => {
+    //console.log(id)
     const tenantDoc = doc(db, "TenantData", id);
+    //console.log(tenantDoc,updateTenant)
     return updateDoc(tenantDoc, updateTenant);
   };
 

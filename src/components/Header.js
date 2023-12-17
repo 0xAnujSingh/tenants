@@ -22,6 +22,7 @@ function ColorSchemesExample() {
             <Nav.Link as={Link} to="/home">Home</Nav.Link>
             <Nav.Link as={Link} to="/AboutUs">About Us</Nav.Link>
             <Nav.Link as={Link} to="/Postdata">New_Tenant</Nav.Link>
+            <Nav.Link as={Link} to="/getAll">Get All</Nav.Link>
             <Nav.Link as={Link} to="/login" style={{marginLeft: "700px" }}>
               Login
             </Nav.Link> 
