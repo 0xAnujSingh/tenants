@@ -3,10 +3,14 @@ import { Container, Table } from "react-bootstrap";
 import TenantDataService from "./TenantData";
 import TenantData from "./TenantData";
 import { Link, useNavigate } from "react-router-dom";
+import { ButtonGroup } from "reactstrap";
 
 const Data = () => {
   const [tenant, setTenant] = useState([]);
   const navigate = useNavigate();
+
+  
+  const Unit = (tenant.PresentUnit - tenant.PresentUnit)
 
   useEffect(() => {
     getTenant();
@@ -21,9 +25,8 @@ const Data = () => {
   const getTenantById = async (id) => {
     const data = await TenantDataService.getTenantById(id);
     console.log(data.data());
-    
 
-    navigate(`/update/${id}`, { state: { tenant: data.data() } }); 
+    navigate(`/update/${id}`, { state: { tenant: data.data() } });
     // console.log(data.docs)
   };
 
@@ -32,41 +35,36 @@ const Data = () => {
     getTenant();
   };
   return (
-    <>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+      }}
+    >
       {/* <pre>{JSON.stringify(tenant, undefined, 2)}</pre> */}
       <Container key={tenant.RoomNo}>
         <Table
+          striped
+          bordered
+          hover
           id="RoomNo"
           style={{
-            textIndent: "30px",
-            display: "inline-block",
-            fontFamily: "Arial, Helvetica, sans-serif",
-            borderCollapse: "collapse",
-            width: "100%",
-            border: "1px solid black",
+            marginTop: "2%",
           }}
         >
           <thead>
-            <tr
-              style={{
-                paddingTop: "12px",
-                paddingBottom: "12px",
-                textAlign: "centre",
-                backgroundColor: "#04AA6D",
-                color: "white",
-                border: "1px solid black",
-              }}
-            >
+            <tr>
               {/* <th>ID</th> */}
               <th>RoomNo.</th>
               <th>Name</th>
               <th>Date of joining(mm/dd/yyyy)</th>
               <th>Till one month(mm/dd/yyyy)</th>
               <th>Rent</th>
-              <th>Present unit</th>
-              <th>Previous unit</th>
+              {/* <th>Present unit</th>
+              <th>Previous unit</th> */}
               <th>Unit</th>
               <th>Overall total(Rent+Unit T)</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -78,6 +76,8 @@ const Data = () => {
                     border: "1px solid black",
                     padding: "8px",
                     backgroundColor: "#f2f2f2",
+                    width: "65%",
+                    height: "65%",
                   }}
                 >
                   {/* <td>{te.id}</td> */}
@@ -91,20 +91,34 @@ const Data = () => {
                     {/* <Button color="success"></Button> */}
                     {te.Rent}
                   </td>
-                  <td>{te.PresentUnit}</td>
-                  <td>{te.PreviousUnit}</td>
-                  <td>{te.Unit}</td>
+                  {/* <td>{te.PresentUnit}</td>
+                  <td>{te.PreviousUnit}</td> */}
+                  <td>{(te.Unit) * 9}</td>
                   <td>{te.Total}</td>
-                  <td>
+                  {/* <td>
                     <button onClick={(e) => handleDelete(te.id)}>Delete</button>
-                  </td>
+                  </td> */}
                   <td>
                     {/* <button>
                       <Link to={`/update/${te.id}`}>Update</Link>
                     </button> */}
-                    <button onClick={(e) => getTenantById(te.id)}>
-                      Update
-                    </button>
+                    <ButtonGroup>
+                      <button
+                        variant="primary"
+                        className="button"
+                        onClick={(e) => getTenantById(te.id)}
+                      >
+                        Update
+                      </button>
+                      <button
+                        variant="primary"
+                        onClick={(e) => handleDelete(te.id)}
+                      >
+                        Delete
+                      </button>
+                      <button variant="primary">Transaction</button>
+                      <button variant="primary">Balance</button>
+                    </ButtonGroup>
                   </td>
                 </tr>
               );
@@ -112,30 +126,8 @@ const Data = () => {
           </tbody>
         </Table>
       </Container>
-    </>
+    </div>
   );
 };
 
 export default Data;
-
-// const getData = async () => {
-//   const data = await fetch(
-//     `http://localhost:5000/tenant`
-//     //"https://tenant-a8edb-default-rtdb.firebaseio.com/tenantRecords.json"
-//     //https://tenant-a8edb-default-rtdb.firebaseio.com
-//     );
-//   const parsedData = await data.json();
-//   //console.log(parsedData)
-//   setTenant(parsedData);
-// };
-
-// const getData = () => {
-//   const getFromFirebase = FireBase.firestore().collection("tenant");
-//   getFromFirebase.onSnapshot((querySnapShot) => {
-//     const saveFirebaseTenant = [];
-//     querySnapShot.forEach((doc) => {
-//       saveFirebaseTenant.push(doc.data());
-//     });
-//     setTenant(saveFirebaseTenant);
-//   });
-// };
