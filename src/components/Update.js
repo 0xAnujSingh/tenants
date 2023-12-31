@@ -61,7 +61,7 @@ const Update = () => {
               name="RoomNo"
               placeholder="RoomNo "
               type="text"
-              value={updateTenant.RoomNo || ""} //  || '' This is just or warning:This is likely caused by the value changing from undefined to a defined value, which should not happen.
+              value={updateTenant.RoomNo || ""} //  || '' This is just for warning:This is likely caused by the value changing from undefined to a defined value, which should not happen.
               onChange={onChangeHandler}
             />
           </FormGroup>

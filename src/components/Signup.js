@@ -27,11 +27,15 @@ const Signup = () => {
       .then(async (res) => {
         setSubmitButtonDisabled(false);
         const user = res.user; // .user is res see in browsers console in that we are taking name
+        
+        // firebase ke ander updateProfile karke ek function hota hai jiske ander displayName hota hai jo hume signup
+        // me jo username hota vo display kara deta hai.
         await updateProfile(user, {
           displayName: values.name,
         });
         navigate("/home");
         console.log(user);
+        
         console.log(res);
       })
       .catch((err) => {

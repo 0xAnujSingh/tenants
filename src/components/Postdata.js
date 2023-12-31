@@ -11,15 +11,12 @@ const Postdata = () => {
     RoomNo: "",
     Name: "",
     DateOfJoining: "",
-    TillOneMonth: "",
+
     Rent: "",
-    PresentUnit: "",
-    PreviousUnit: "",
-    //Unit: "",
-    Total: "",
+    Balance: "",
+    Unit: "",
   });
 
-  
   const changeHandler = (e) => {
     // e.preventDefault()
     setTenantData({ ...tenantData, [e.target.name]: e.target.value });
@@ -31,26 +28,19 @@ const Postdata = () => {
       RoomNo,
       Name,
       DateOfJoining,
-      TillOneMonth,
+
       Rent,
-      PresentUnit,
-      PreviousUnit,
-      //Unit,
-      Total,
+      Balance,
+      Unit,
     } = tenantData;
-    if (
-      RoomNo &&
-      Name &&
-      DateOfJoining &&
-      TillOneMonth &&
-      Rent &&
-      PresentUnit &&
-      PreviousUnit &&
-      //Unit &&
-      Total
-    ) {
+    if (RoomNo && Name && DateOfJoining && Rent && Unit && Balance) {
       const dbRef = collection(db, "TenantData");
       console.log(tenantData);
+
+      const newTenantData = tenantData;
+      newTenantData.Balance = Number(tenantData.Balance);
+      newTenantData.Unit = Number(tenantData.Unit);
+      newTenantData.Rent = Number(tenantData.Rent);
 
       await TenantDataService.addTenant(dbRef, tenantData)
         .then((docRef) => {
@@ -59,12 +49,11 @@ const Postdata = () => {
             RoomNo: "",
             Name: "",
             DateOfJoining: "",
-            TillOneMonth: "",
+
             Rent: "",
-            PresentUnit: "",
-            PreviousUnit: "",
-            //Unit: "",
-            Total: "",
+
+            Balance: "",
+            Unit: "",
           });
         })
         .catch((error) => {
@@ -80,15 +69,18 @@ const Postdata = () => {
     <div
       className="container mx-2 my-3"
       style={{
-        width: "100%",
         justifyContent: "center",
         backgroundColor: "#DCDCDC",
         height: "100%",
         backgroundImage: `url(${image})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "contain",
-        height: "100%",
-        width: "100%",
+        height: "50%",
+        width: "50%",
+        border: "2px solid black",
+        marginTop: "2%",
+        marginLeft: "25%",
+        borderRadius: "2%",
       }}
     >
       <Form action="#" onSubmit={submitData}>
@@ -128,18 +120,6 @@ const Postdata = () => {
         </FormGroup>
 
         <FormGroup>
-          <Label for="examplePassword"> Till One Month </Label>
-          <Input
-            id="TillOneMonth"
-            name="TillOneMonth"
-            placeholder="TillOneMonth"
-            type="date"
-            value={tenantData.TillOneMonth}
-            onChange={changeHandler}
-          />
-        </FormGroup>
-
-        <FormGroup>
           <Label for="examplePassword"> Rent </Label>
           <Input
             id="Rent"
@@ -152,30 +132,6 @@ const Postdata = () => {
         </FormGroup>
 
         <FormGroup>
-          <Label for="examplePassword"> Present Unit </Label>
-          <Input
-            id="PresentUnit"
-            name="PresentUnit"
-            placeholder="PresentUnit"
-            type="number"
-            value={tenantData.PresentUnit}
-            onChange={changeHandler}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="examplePassword"> Previous Unit </Label>
-          <Input
-            id="PreviousUnit"
-            name="PreviousUnit"
-            placeholder="PreviousUnit"
-            type="number"
-            value={tenantData.PreviousUnit}
-            onChange={changeHandler}
-          />
-        </FormGroup>
-
-        {/* <FormGroup>
           <Label for="examplePassword"> Unit </Label>
           <Input
             id="Unit"
@@ -185,16 +141,15 @@ const Postdata = () => {
             value={tenantData.Unit}
             onChange={changeHandler}
           />
-        </FormGroup> */}
-
+        </FormGroup>
         <FormGroup>
-          <Label for="examplePassword"> Total </Label>
+          <Label for="examplePassword"> Balance </Label>
           <Input
-            id="Total"
-            name="Total"
-            placeholder="Total"
+            id="Balance"
+            name="Balance"
+            placeholder="Balance"
             type="number"
-            value={tenantData.Total}
+            value={tenantData.Balance}
             onChange={changeHandler}
           />
         </FormGroup>

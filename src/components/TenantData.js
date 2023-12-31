@@ -11,6 +11,8 @@ import {
 
 const tenantCollectionRef = collection(db, "TenantData");
 class TenantDataService {
+  ref = () => tenantCollectionRef;
+
   addTenant = (colRef, newTenant) => {
     return addDoc(colRef, newTenant);
   };
