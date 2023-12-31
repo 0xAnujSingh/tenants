@@ -22,9 +22,8 @@ const Data = () => {
       // if (!snapshot) { return; }
       // console.log(snapshot.docs);
       setTenants(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    }) ;
+    });
     // const data = await TenantDataService.getAllTenants();
-    
   };
 
   const getTenantById = async (id) => {
@@ -47,25 +46,43 @@ const Data = () => {
   };
 
   function handleUpdateUnit(tenant) {
-
     // This is updateUnit button here we want to update our new unit to the old unit(or replace our old unit with new unit)
-     
+
     const newUnit = Number(prompt("Enter New Unit"));
     //alert(newUnit)
     // (newUnit - Unit) *10 + Balance
     const newBalance = (newUnit - tenant.Unit) * 10 + tenant.Balance;
 
-    // newData = tenant ..ye humne is liye kara hai kyu hume kuch properties he update karna hai(jaise Unit) to  
-    // humne kya kara tenant ke ander jo bhi data tha usko tenant ke ander dal diya taki jab bhi hum change kare 
+    // newData = tenant ..ye humne is liye kara hai kyu hume kuch properties he update karna hai(jaise Unit) to
+    // humne kya kara tenant ke ander jo bhi data tha usko tenant ke ander dal diya taki jab bhi hum change kare
     // to direct tenant(useState) me na hote hui vo sirf locally newData me hi ho.
-    const newData = Object.assign({}, tenant); 
-    
-    
+    const newData = Object.assign({}, tenant);
+
     delete newData.id; // delete humne isliye kari taki id same hi rahe or ched chad na ho
     newData.Balance = newBalance;
     newData.Unit = newUnit;
-    console.log(newData)
+    console.log(newData);
     TenantDataService.updateTenant(tenant.id, newData);
+  }
+
+  function handleDateupdate(tenant) {
+    const newDate = tenant.RentPaidTill.toDate();
+    newDate.setMonth(newDate.getMonth() + 1);
+    console.log(newDate);
+
+    const newData = Object.assign({}, tenant);
+    newData.RentPaidTill = newDate;
+    newData.Balance = tenant.Rent + tenant.Balance
+    TenantDataService.updateTenant(tenant.id, newData);
+  }
+  //console.log(tenants)
+  function handlePaybill(tenant){
+    const Billpay = Number(prompt("Enter paying Amount"))
+    const newBalance = tenant.Balance - Billpay
+    //console.log(newBalance)
+    const newData = Object.assign({}, tenant);
+    newData.Balance = newBalance 
+    TenantDataService.updateTenant(tenant.id, newData)
   }
 
   return (
@@ -92,16 +109,15 @@ const Data = () => {
               <th>RoomNo.</th>
               <th>Name</th>
               <th>Date of joining(mm/dd/yyyy)</th>
-
+              <th>RentPaidTill</th>
               <th>Rent</th>
-
               <th>Unit</th>
               <th>Balance</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {tenants.map((te, index) => {
+            {tenants.map((te) => {
               return (
                 <tr
                   key={te.RoomNo}
@@ -113,17 +129,14 @@ const Data = () => {
                     height: "65%",
                   }}
                 >
-                  {/* <td>{te.id}</td> */}
                   <td>{te.RoomNo}</td>
 
                   <td>{te.Name}</td>
 
-                  <td>{te.DateOfJoining}</td>
+                  <td>{te.DateOfJoining.toDate().toString()}</td>
+                  <td>{te.RentPaidTill.toDate().toString()}</td>
 
-                  <td>
-                    {/* <Button color="success"></Button> */}
-                    {te.Rent}
-                  </td>
+                  <td>{te.Rent}</td>
 
                   <td>{te.Unit}</td>
 
@@ -142,7 +155,7 @@ const Data = () => {
                         className="button"
                         onClick={() => handleUpdateUnit(te)}
                       >
-                        Update Unit
+                        UnitUpdate
                       </button>
                       <button
                         variant="primary"
@@ -150,12 +163,16 @@ const Data = () => {
                       >
                         Delete
                       </button>
-                      <button variant="primary">Transaction</button>
                       <button
                         variant="primary"
-                        onClick={(e) => getBalance(te.id)}
+                        onClick={() => handleDateupdate(te)}
                       >
-                        Balance
+                        DateUpdate
+                      </button>
+                      <button
+                        onClick={() => handlePaybill(te)}
+                      >
+                        Pay Bill
                       </button>
                     </ButtonGroup>
                   </td>

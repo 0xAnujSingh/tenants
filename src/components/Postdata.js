@@ -18,6 +18,7 @@ const Postdata = () => {
   });
 
   const changeHandler = (e) => {
+    console.log(e.target.value)
     // e.preventDefault()
     setTenantData({ ...tenantData, [e.target.name]: e.target.value });
   };
@@ -41,6 +42,9 @@ const Postdata = () => {
       newTenantData.Balance = Number(tenantData.Balance);
       newTenantData.Unit = Number(tenantData.Unit);
       newTenantData.Rent = Number(tenantData.Rent);
+      newTenantData.DateOfJoining = new Date(Date.parse(tenantData.DateOfJoining));
+      newTenantData.RentPaidTill = new Date(Date.parse(tenantData.DateOfJoining));
+
 
       await TenantDataService.addTenant(dbRef, tenantData)
         .then((docRef) => {
