@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Dropdown, Table } from "react-bootstrap";
 import TenantDataService from "./TenantData";
 import TenantData from "./TenantData";
 import { Link, useNavigate } from "react-router-dom";
@@ -72,17 +72,17 @@ const Data = () => {
 
     const newData = Object.assign({}, tenant);
     newData.RentPaidTill = newDate;
-    newData.Balance = tenant.Rent + tenant.Balance
+    newData.Balance = tenant.Rent + tenant.Balance;
     TenantDataService.updateTenant(tenant.id, newData);
   }
   //console.log(tenants)
-  function handlePaybill(tenant){
-    const Billpay = Number(prompt("Enter paying Amount"))
-    const newBalance = tenant.Balance - Billpay
+  function handlePaybill(tenant) {
+    const Billpay = Number(prompt("Enter paying Amount"));
+    const newBalance = tenant.Balance - Billpay;
     //console.log(newBalance)
     const newData = Object.assign({}, tenant);
-    newData.Balance = newBalance 
-    TenantDataService.updateTenant(tenant.id, newData)
+    newData.Balance = newBalance;
+    TenantDataService.updateTenant(tenant.id, newData);
   }
 
   return (
@@ -108,9 +108,9 @@ const Data = () => {
               {/* <th>ID</th> */}
               <th>RoomNo.</th>
               <th>Name</th>
-              <th>Date of joining(mm/dd/yyyy)</th>
+              <th>Joined From</th>
               <th>RentPaidTill</th>
-              <th>Rent</th>
+              <th>Rent<small style={{ color: 'rgba(0,0,0,0.5)'}}>/month</small></th>
               <th>Unit</th>
               <th>Balance</th>
               <th>Action</th>
@@ -133,48 +133,57 @@ const Data = () => {
 
                   <td>{te.Name}</td>
 
-                  <td>{te.DateOfJoining.toDate().toString()}</td>
-                  <td>{te.RentPaidTill.toDate().toString()}</td>
+                  <td>{te.DateOfJoining.toDate().toDateString()}</td>
+                  <td>{te.RentPaidTill.toDate().toDateString()}</td>
 
-                  <td>{te.Rent}</td>
+                  <td>₹{te.Rent}</td>
 
                   <td>{te.Unit}</td>
 
-                  <td>{te.Balance}</td>
+                  <td>₹{te.Balance}</td>
 
                   {/* <td>
                     <button onClick={(e) => handleDelete(te.id)}>Delete</button>
                   </td> */}
                   <td>
-                    {/* <button>
-                      <Link to={`/update/${te.id}`}>Update</Link>
-                    </button> */}
-                    <ButtonGroup>
-                      <button
-                        variant="primary"
-                        className="button"
+                    <Dropdown>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Actions
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                      <Dropdown.Item
                         onClick={() => handleUpdateUnit(te)}
                       >
                         UnitUpdate
-                      </button>
-                      <button
-                        variant="primary"
+                      </Dropdown.Item>
+                      <Dropdown.Item
                         onClick={(e) => handleDelete(te.id)}
                       >
                         Delete
-                      </button>
-                      <button
-                        variant="primary"
+                      </Dropdown.Item>
+                      <Dropdown.Item
                         onClick={() => handleDateupdate(te)}
                       >
                         DateUpdate
-                      </button>
-                      <button
-                        onClick={() => handlePaybill(te)}
-                      >
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => handlePaybill(te)}>
                         Pay Bill
-                      </button>
-                    </ButtonGroup>
+                      </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    {/* <button>
+                      <Link to={`/update/${te.id}`}>Update</Link>
+                    </button> */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "8px",
+                      }}
+                    >
+                      
+                    </div>
                   </td>
                 </tr>
               );
