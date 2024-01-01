@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Dropdown, Table } from "react-bootstrap";
-import TenantDataService from "./TenantData";
-import TenantData from "./TenantData";
-import { Link, useNavigate } from "react-router-dom";
-import { ButtonGroup } from "reactstrap";
-import Balance from "./Balance";
+import { Container, Dropdown, Table } from "react-bootstrap";
+import TenantDataService from "./TenantDataService";
+import { useNavigate } from "react-router-dom";
 import { onSnapshot } from "firebase/firestore";
 
 const Data = () => {
@@ -31,7 +28,6 @@ const Data = () => {
     console.log(data.data());
 
     navigate(`/update/${id}`, { state: { tenant: data.data() } });
-    // console.log(data.docs)
   };
 
   const handleDelete = async (id) => {
@@ -141,10 +137,6 @@ const Data = () => {
                   <td>{te.Unit}</td>
 
                   <td>₹{te.Balance}</td>
-
-                  {/* <td>
-                    <button onClick={(e) => handleDelete(te.id)}>Delete</button>
-                  </td> */}
                   <td>
                     <Dropdown>
                       <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -155,20 +147,21 @@ const Data = () => {
                       <Dropdown.Item
                         onClick={() => handleUpdateUnit(te)}
                       >
-                        UnitUpdate
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={(e) => handleDelete(te.id)}
-                      >
-                        Delete
+                        Log Units
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => handleDateupdate(te)}
                       >
-                        DateUpdate
+                        Generate Rent
                       </Dropdown.Item>
                       <Dropdown.Item onClick={() => handlePaybill(te)}>
                         Pay Bill
+                      </Dropdown.Item>
+                      
+                      <Dropdown.Item
+                        onClick={(e) => handleDelete(te.id)}
+                      >
+                        Delete
                       </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>

@@ -7,43 +7,37 @@ import { Link } from "react-router-dom";
 
 
 
-function ColorSchemesExample() {
+function Header({ user }) {
   return (
-    <>
       <Navbar bg="dark" data-bs-theme="dark">
         <Container>
           <Navbar.Brand
-            href="home"
+            href="/"
             style={{
               position: "static",
               height: "100%",
               fontSize: "30px",
             }}
           >
-            Tenant
+            Tenants
           </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/home">
-              Home
+          <Nav className="me-auto" style={{ width: '100%' }}>
+            
+          <Nav.Link as={Link} to="/">
+              View Tenants
             </Nav.Link>
-            <Nav.Link as={Link} to="/AboutUs">
-              About_Us
+            <Nav.Link as={Link} to="/new-tenant">
+              Add Tenant
             </Nav.Link>
-            <Nav.Link as={Link} to="/Postdata">
-              New_Tenant
-            </Nav.Link>
-            <Nav.Link as={Link} to="/getAll">
-              Get_All
-            </Nav.Link>
-            <Nav.Link as={Link} to="/login" style={{ marginLeft: "700px" }}>
+            <span style={{ flexGrow: 1 }}></span>
+            { !user && <Nav.Link as={Link} to="/login" style={{ float: 'right' }}>
               Login
-            </Nav.Link>
-            <Button onClick={() => getAuth().signOut()}>Logout</Button>
+            </Nav.Link> }
+            { user && <Button onClick={() => getAuth().signOut()}>Logout</Button> }
           </Nav>
         </Container>
       </Navbar>
-    </>
   );
 }
 
-export default ColorSchemesExample;
+export default Header;

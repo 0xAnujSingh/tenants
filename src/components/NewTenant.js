@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-import TenantDataService from "./TenantData";
+import TenantDataService from "./TenantDataService";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import TenantData from "./TenantData";
+import TenantData from "./TenantDataService";
 import image from "../img/modern-residential-district-with-green-roof-balcony-generated-by-ai.jpg";
 
 const Postdata = () => {
