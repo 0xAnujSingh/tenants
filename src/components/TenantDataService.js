@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 
 const tenantCollectionRef = collection(db, "TenantData");
+
 class TenantDataService {
   ref = () => tenantCollectionRef;
 
@@ -18,9 +19,7 @@ class TenantDataService {
   };
 
   updateTenant = (id, updateTenant) => {
-    //console.log(id)
     const tenantDoc = doc(db, "TenantData", id);
-    //console.log(tenantDoc,updateTenant)
     return updateDoc(tenantDoc, updateTenant);
   };
 
@@ -34,13 +33,11 @@ class TenantDataService {
   };
   
   getTenantById = (id) => {
-    //console.log(id)
     const tenantDoc = doc(db, "TenantData", id);
-    //console.log(id)
-    //console.log(getDoc(tenantDoc))
     return getDoc(tenantDoc);
     
   };
+
 }
 
 export default new TenantDataService();

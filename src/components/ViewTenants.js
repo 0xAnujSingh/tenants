@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Container, Dropdown, Table } from "react-bootstrap";
 import TenantDataService from "./TenantDataService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { onSnapshot } from "firebase/firestore";
+import TransactionService from "./TransactionService";
+import { db } from "../firebase";
 
-const Data = () => {
+import { collection } from "firebase/firestore";
+
+const ViewTenants = () => {
   const [tenants, setTenants] = useState([]);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const outlet = useOutletContext();
   //const Unit = (tenant.PresentUnit - tenant.PreviousUnit) * 9;
 
   useEffect(() => {
@@ -59,6 +64,24 @@ const Data = () => {
     newData.Unit = newUnit;
     console.log(newData);
     TenantDataService.updateTenant(tenant.id, newData);
+
+    const dbRef = collection(db, "Transactions");
+
+    // jaise hi balance update ho vaise hi ek transaction banana chaiye or transaction ke ander
+    // amount, item, quantity, type, id
+
+    const quantity = newUnit - tenant.Unit;
+    const price = 10;
+    const transaction = {
+      item: "electricity",
+      quantity: quantity,
+      type: "Debit",
+      price: price,
+      amount: quantity * price,
+      tenantId: tenant.id,
+      tenantName: tenant.name
+    };
+    TransactionService.addTransaction(dbRef, transaction);
   }
 
   function handleDateupdate(tenant) {
@@ -70,17 +93,49 @@ const Data = () => {
     newData.RentPaidTill = newDate;
     newData.Balance = tenant.Rent + tenant.Balance;
     TenantDataService.updateTenant(tenant.id, newData);
+
+    const dbRef = collection(db, "Transactions");
+
+    const transaction = {
+      item: "rent",
+      quantity: 1,
+      type: "Debit",
+      price: tenant.Rent,
+      amount: tenant.Rent,
+      tenantId: tenant.id,
+      tenantName: tenant.Name
+    };
+
+    TransactionService.addTransaction(dbRef, transaction);
   }
-  //console.log(tenants)
+
   function handlePaybill(tenant) {
     const Billpay = Number(prompt("Enter paying Amount"));
     const newBalance = tenant.Balance - Billpay;
-    //console.log(newBalance)
     const newData = Object.assign({}, tenant);
     newData.Balance = newBalance;
     TenantDataService.updateTenant(tenant.id, newData);
-  }
 
+    const dbRef = collection(db, "Transactions");
+
+    const transaction = {
+      item: "payment",
+      quantity: 1,
+      type: "Credit",
+      price: Billpay,
+      amount: Billpay,
+      tenantId: tenant.id,
+      tenantName: tenant.Name
+    };
+
+    TransactionService.addTransaction(dbRef, transaction);
+  }
+  const handleTransactions = async (id) => {
+    const data = await TenantDataService.getTenantById(id);
+    console.log(data.data());
+
+    navigate(`/transactions/${id}`, { state: { transactions: data.data() } });
+  };
   return (
     <div
       style={{
@@ -90,6 +145,7 @@ const Data = () => {
     >
       {/* <pre>{JSON.stringify(tenant, undefined, 2)}</pre> */}
       <Container>
+        <p style={{ fontSize: "32px" }}>Welcome! {outlet.user.displayName}</p>
         <Table
           striped
           bordered
@@ -106,7 +162,9 @@ const Data = () => {
               <th>Name</th>
               <th>Joined From</th>
               <th>RentPaidTill</th>
-              <th>Rent<small style={{ color: 'rgba(0,0,0,0.5)'}}>/month</small></th>
+              <th>
+                Rent<small style={{ color: "rgba(0,0,0,0.5)" }}>/month</small>
+              </th>
               <th>Unit</th>
               <th>Balance</th>
               <th>Action</th>
@@ -144,39 +202,34 @@ const Data = () => {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                      <Dropdown.Item
-                        onClick={() => handleUpdateUnit(te)}
-                      >
-                        Log Units
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() => handleDateupdate(te)}
-                      >
-                        Generate Rent
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => handlePaybill(te)}>
-                        Pay Bill
-                      </Dropdown.Item>
-                      
-                      <Dropdown.Item
-                        onClick={(e) => handleDelete(te.id)}
-                      >
-                        Delete
-                      </Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleUpdateUnit(te)}>
+                          Log Units
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleDateupdate(te)}>
+                          Generate Rent
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => handlePaybill(te)}>
+                          Pay Bill
+                        </Dropdown.Item>
+
+                        <Dropdown.Item onClick={(e) => handleDelete(te.id)}>
+                          Delete
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={(e) => handleTransactions(te.id)}
+                        >
+                          View Transactions
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    {/* <button>
-                      <Link to={`/update/${te.id}`}>Update</Link>
-                    </button> */}
+                  
                     <div
                       style={{
                         display: "flex",
                         flexDirection: "column",
                         gap: "8px",
                       }}
-                    >
-                      
-                    </div>
+                    ></div>
                   </td>
                 </tr>
               );
@@ -188,4 +241,4 @@ const Data = () => {
   );
 };
 
-export default Data;
+export default ViewTenants;

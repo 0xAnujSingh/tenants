@@ -4,8 +4,9 @@ import InputControl from "./InputControl/InputControl.js";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase";
+import { Navigate } from "react-router-dom";
 
-const Signup = () => {
+const Signup = ({ user }) => {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     name: "",
@@ -33,7 +34,7 @@ const Signup = () => {
         await updateProfile(user, {
           displayName: values.name,
         });
-        navigate("/home");
+        navigate("/");
         console.log(user);
         
         console.log(res);
@@ -44,6 +45,11 @@ const Signup = () => {
         console.log("Error-", err.message);
       });
   };
+
+  if (user) {
+    return <Navigate to='/'/>
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.innerBox}>

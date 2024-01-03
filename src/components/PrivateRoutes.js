@@ -5,17 +5,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import Header from './Header';
 import Footer from "./Footer";
 
-const PrivateRoutes = () => {
-  const [user, setUser] = useState(undefined);
-
-  useEffect(() => {
-    const auth = getAuth();
-
-    onAuthStateChanged(auth, (u) => {
-      setUser(u);
-    });
-  });
-
+const PrivateRoutes = ({ user }) => {
   if (user === undefined) {
     return <p>Loading</p>
   }
@@ -26,7 +16,7 @@ const PrivateRoutes = () => {
 
   return <main>
     <Header user={user} />
-    <Outlet />
+    <Outlet context={{user}} />
     <Footer />
   </main>;
 };

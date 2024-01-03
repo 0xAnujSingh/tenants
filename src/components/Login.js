@@ -1,11 +1,11 @@
 import { React, useState } from "react";
 import styles from "./Login.module.css";
 import InputControl from "./InputControl/InputControl.js";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
-const Login = () => {
+const Login = ({ user }) => {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     email: "",
@@ -29,7 +29,7 @@ const Login = () => {
       .then(async (res) => {
         setSubmitButtonDisabled(false);
 
-        navigate("/home");
+        navigate("/");
         console.log(res);
       })
       .catch((err) => {
@@ -38,6 +38,11 @@ const Login = () => {
         console.log("Error-", err.message);
       });
   };
+
+  if (user) {
+    return <Navigate to='/'/>;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.innerBox}>
