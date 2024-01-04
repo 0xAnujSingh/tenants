@@ -19,8 +19,8 @@ const Login = ({ user }) => {
       setErrorMsg("Fill all fields");
       return;
     }
-    if(values.email == "admin@gmail.com" & values.pass == "admin@123"){
-      navigate("/getAll")
+    if ((values.email == "admin@gmail.com") & (values.pass == "admin@123")) {
+      navigate("/getAll");
     }
     setErrorMsg("");
     setSubmitButtonDisabled(true);
@@ -40,43 +40,45 @@ const Login = ({ user }) => {
   };
 
   if (user) {
-    return <Navigate to='/'/>;
+    return <Navigate to="/" />;
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.innerBox}>
-        <h1 className={styles.heading}>Login</h1>
-        <InputControl
-          label="Email"
-          placeholder="Enter email adderss"
-          onChange={(event) => {
-            setValues((prev) => ({ ...prev, email: event.target.value }));
-          }}
-        />
-        <InputControl
-          label="Password"
-          placeholder="Enter Password"
-          type = "password"
-          onChange={(event) => {
-            setValues((prev) => ({ ...prev, pass: event.target.value }));
-          }}
-        />
+    <form onSubmit={handleSubmission}>
+      <div className={styles.container}>
+        <div className={styles.innerBox}>
+          <h1 className={styles.heading}>Login</h1>
+          <InputControl
+            label="Email"
+            placeholder="Enter email adderss"
+            onChange={(event) => {
+              setValues((prev) => ({ ...prev, email: event.target.value }));
+            }}
+          />
+          <InputControl
+            label="Password"
+            placeholder="Enter Password"
+            type="password"
+            onChange={(event) => {
+              setValues((prev) => ({ ...prev, pass: event.target.value }));
+            }}
+          />
 
-        <div className={styles.footer}>
-          <b className={styles.error}> {errorMsg}</b>
-          <button disabled={submitButtonDisabled} onClick={handleSubmission}>
-            Login
-          </button>
-          <p>
-            Already have an account?{""}
-            <span>
-              <Link to="/signup">Sign up</Link>
-            </span>
-          </p>
+          <div className={styles.footer}>
+            <b className={styles.error}> {errorMsg}</b>
+            <button disabled={submitButtonDisabled} onClick={handleSubmission}>
+              Login
+            </button>
+            <p>
+              Already have an account?{""}
+              <span>
+                <Link to="/signup">Sign up</Link>
+              </span>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

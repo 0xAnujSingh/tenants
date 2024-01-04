@@ -5,8 +5,10 @@ import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import TenantData from "./TenantDataService";
 import image from "../img/modern-residential-district-with-green-roof-balcony-generated-by-ai.jpg";
+import { useOutletContext } from "react-router-dom";
 
-const Postdata = () => {
+const NewTenant = () => {
+  const outlet = useOutletContext()
   const [tenantData, setTenantData] = useState({
     RoomNo: "",
     Name: "",
@@ -44,6 +46,7 @@ const Postdata = () => {
       newTenantData.Rent = Number(tenantData.Rent);
       newTenantData.DateOfJoining = new Date(Date.parse(tenantData.DateOfJoining));
       newTenantData.RentPaidTill = new Date(Date.parse(tenantData.DateOfJoining));
+      newTenantData.Owner = outlet.user.uid;
 
 
       await TenantDataService.addTenant(dbRef, tenantData)
@@ -169,4 +172,4 @@ const Postdata = () => {
   );
 };
 
-export default Postdata;
+export default NewTenant;

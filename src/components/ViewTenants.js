@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Container, Dropdown, Table } from "react-bootstrap";
+import { Button, Container, Dropdown, Table } from "react-bootstrap";
 import TenantDataService from "./TenantDataService";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { onSnapshot } from "firebase/firestore";
+import { onSnapshot, query, where } from "firebase/firestore";
 import TransactionService from "./TransactionService";
 import { db } from "../firebase";
 
@@ -20,7 +20,9 @@ const ViewTenants = () => {
   }, []);
 
   const getTenant = async () => {
-    onSnapshot(TenantDataService.ref(), (snapshot) => {
+
+    const q = query(TenantDataService.ref(), where("Owner", "==", outlet.user.uid ))
+    onSnapshot(q, (snapshot) => {
       // if (!snapshot) { return; }
       // console.log(snapshot.docs);
       setTenants(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -79,7 +81,7 @@ const ViewTenants = () => {
       price: price,
       amount: quantity * price,
       tenantId: tenant.id,
-      tenantName: tenant.name
+      tenantName: tenant.name,
     };
     TransactionService.addTransaction(dbRef, transaction);
   }
@@ -103,7 +105,7 @@ const ViewTenants = () => {
       price: tenant.Rent,
       amount: tenant.Rent,
       tenantId: tenant.id,
-      tenantName: tenant.Name
+      tenantName: tenant.Name,
     };
 
     TransactionService.addTransaction(dbRef, transaction);
@@ -125,7 +127,7 @@ const ViewTenants = () => {
       price: Billpay,
       amount: Billpay,
       tenantId: tenant.id,
-      tenantName: tenant.Name
+      tenantName: tenant.Name,
     };
 
     TransactionService.addTransaction(dbRef, transaction);
@@ -136,6 +138,7 @@ const ViewTenants = () => {
 
     navigate(`/transactions/${id}`, { state: { transactions: data.data() } });
   };
+
   return (
     <div
       style={{
@@ -222,7 +225,6 @@ const ViewTenants = () => {
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                  
                     <div
                       style={{
                         display: "flex",
