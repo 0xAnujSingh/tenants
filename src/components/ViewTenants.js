@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Dropdown, Table } from "react-bootstrap";
+import { Container, Dropdown, Table } from "react-bootstrap";
 import TenantDataService from "./TenantDataService";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { onSnapshot, query, where } from "firebase/firestore";
@@ -20,11 +20,13 @@ const ViewTenants = () => {
   }, []);
 
   const getTenant = async () => {
-
-    const q = query(TenantDataService.ref(), where("Owner", "==", outlet.user.uid ))
+    const q = query(
+      TenantDataService.ref(),
+      where("Owner", "==", outlet.user.uid)
+    );
     onSnapshot(q, (snapshot) => {
       // if (!snapshot) { return; }
-      // console.log(snapshot.docs);
+      //console.log(snapshot.docs);
       setTenants(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
     // const data = await TenantDataService.getAllTenants();

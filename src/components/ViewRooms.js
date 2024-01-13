@@ -41,7 +41,7 @@ const ViewRooms = () => {
           <tbody>
             {rooms.map((ro) => {
               return (
-                <tr>
+                <tr key={ro.id}>
                   <td>{ro.RoomNo}</td>
                   <td>{ro.Rent}</td>
                   <td>{ro.Unit}</td>
@@ -49,7 +49,7 @@ const ViewRooms = () => {
                   <td>{ro.Windows}</td>
                   <td>{ro.RoomSize}</td>
                   <td>
-                    {outlet.user.uid === ro.Owner ? <Link to={`/rooms/${ro.id}/requests`}>View Requests</Link> : <Link to={`/rooms/${ro.id}/new-tenant`}>Apply</Link>} 
+                    {outlet.user.uid === ro.Owner ? <Link to={`/rooms/${ro.id}/requests`}>View Requests</Link> : <Link to={`/rooms/${ro.id}/tenant`}>Apply</Link>} 
                     
                   </td>
                 </tr>

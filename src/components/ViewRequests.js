@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import TenantDataService from "./TenantDataService";
 import { onSnapshot } from "firebase/firestore";
 import { Button, Container, Table } from "reactstrap";
+import { Dropdown } from "react-bootstrap";
 
 const ViewRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -19,21 +20,23 @@ const ViewRequests = () => {
   };
 
   const handleAccept = async (request) => {
-    if ((requests.state = "requested")) {
-      const newData = Object.assign({}, requests);
-      const newState = "accept";
+    if ((request.state === "requested")) {
+      const newData = Object.assign({}, request);
+      const newState = "accepted";
       newData.state = newState;
       const data = TenantDataService.updateTenant(request.id, newData);
     }
   };
+
   const handleReject = async (request) => {
-    if ((requests.state = "requested")) {
-      const newData = Object.assign({}, requests);
-      const newState = "reject";
+    if ((request.state === "requested")) {
+      const newData = Object.assign({}, request);
+      const newState = "rejected";
       newData.state = newState;
       await TenantDataService.updateTenant(request.id, newData);
     }
   };
+
   return (
     <div>
       <Container>
@@ -55,19 +58,45 @@ const ViewRequests = () => {
                   <td>{re.state}</td>
 
                   <td>
-                    <Button
+                    { re.state === 'requested' && <Button
                       style={{ margin: "0 10px" }}
                       onClick={() => handleAccept(re)}
                     >
                       Accept
-                    </Button>
-                    <button
+                    </Button> }
+                    { re.state === 'requested' && <Button
                       type="button"
                       className="btn btn-danger"
                       onClick={() => handleReject(re)}
                     >
                       Reject
-                    </button>
+                    </Button> }
+                    { re.state === 'accepted' && <Dropdown>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Actions
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => console.log()}>
+                          Log Units
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => console.log()}>
+                          Generate Rent
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => console.log()}>
+                          Pay Bill
+                        </Dropdown.Item>
+
+                        <Dropdown.Item onClick={(e) => console.log()}>
+                          Delete
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={(e) => console.log()}
+                        >
+                          View Transactions
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>}
                   </td>
                 </tr>
               );

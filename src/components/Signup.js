@@ -28,16 +28,16 @@ const Signup = ({ user }) => {
       .then(async (res) => {
         setSubmitButtonDisabled(false);
         const user = res.user; // .user is res see in browsers console in that we are taking name
-        
+
         // firebase ke ander updateProfile karke ek function hota hai jiske ander displayName hota hai jo hume signup
         // me jo username hota vo display kara deta hai.
         await updateProfile(user, {
           displayName: values.name,
         });
         navigate("/");
-        console.log(user);
-        
-        console.log(res);
+        //console.log(user);
+
+        //console.log(res);
       })
       .catch((err) => {
         setSubmitButtonDisabled(false);
@@ -47,7 +47,7 @@ const Signup = ({ user }) => {
   };
 
   if (user) {
-    return <Navigate to='/'/>
+    return <Navigate to="/" />;
   }
 
   return (
@@ -72,7 +72,7 @@ const Signup = ({ user }) => {
         <InputControl
           label="Password"
           placeholder="Enter password"
-          type = "password"
+          type="password"
           onChange={(event) =>
             setValues((prev) => ({ ...prev, pass: event.target.value }))
           }

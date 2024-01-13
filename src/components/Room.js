@@ -14,7 +14,7 @@ function ViewTenant({ tenant }) {
   return <p>{tenant.roomId}</p>
 }
 
-const AddNewTenant = () => {
+const Room = () => {
   const params = useParams();
   //console.log(params.id);
 
@@ -177,4 +177,4 @@ const AddNewTenant = () => {
   );
 };
 
-export default AddNewTenant;
+export default Room;

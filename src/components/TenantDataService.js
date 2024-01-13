@@ -31,13 +31,11 @@ class TenantDataService {
   getAllTenants = () => {
     return getDocs(tenantCollectionRef);
   };
-  
+
   getTenantById = (id) => {
     const tenantDoc = doc(db, "TenantData", id);
     return getDoc(tenantDoc);
-    
   };
-
 }
 
 export default new TenantDataService();

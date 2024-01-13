@@ -3,51 +3,44 @@ import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import TenantDataService from "./TenantDataService";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import TenantData from "./TenantDataService";
 import image from "../img/modern-residential-district-with-green-roof-balcony-generated-by-ai.jpg";
 import { useOutletContext } from "react-router-dom";
 
 const NewTenant = () => {
-  const outlet = useOutletContext()
+  const outlet = useOutletContext();
   const [tenantData, setTenantData] = useState({
     RoomNo: "",
     Name: "",
     DateOfJoining: "",
-
     Rent: "",
     Balance: "",
     Unit: "",
   });
 
   const changeHandler = (e) => {
-    console.log(e.target.value)
+    console.log(e.target.value);
     // e.preventDefault()
     setTenantData({ ...tenantData, [e.target.name]: e.target.value });
   };
 
   const submitData = async (e) => {
     e.preventDefault();
-    const {
-      RoomNo,
-      Name,
-      DateOfJoining,
-
-      Rent,
-      Balance,
-      Unit,
-    } = tenantData;
+    const { RoomNo, Name, DateOfJoining, Rent, Balance, Unit } = tenantData;
     if (RoomNo && Name && DateOfJoining && Rent && Unit && Balance) {
       const dbRef = collection(db, "TenantData");
-      console.log(tenantData);
+      //console.log(tenantData);
 
       const newTenantData = tenantData;
       newTenantData.Balance = Number(tenantData.Balance);
       newTenantData.Unit = Number(tenantData.Unit);
       newTenantData.Rent = Number(tenantData.Rent);
-      newTenantData.DateOfJoining = new Date(Date.parse(tenantData.DateOfJoining));
-      newTenantData.RentPaidTill = new Date(Date.parse(tenantData.DateOfJoining));
+      newTenantData.DateOfJoining = new Date(
+        Date.parse(tenantData.DateOfJoining)
+      );
+      newTenantData.RentPaidTill = new Date(
+        Date.parse(tenantData.DateOfJoining)
+      );
       newTenantData.Owner = outlet.user.uid;
-
 
       await TenantDataService.addTenant(dbRef, tenantData)
         .then((docRef) => {
@@ -62,6 +55,7 @@ const NewTenant = () => {
             Balance: "",
             Unit: "",
           });
+          //console.log(tenantData);
         })
         .catch((error) => {
           console.log(error);

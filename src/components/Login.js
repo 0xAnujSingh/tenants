@@ -29,7 +29,7 @@ const Login = ({ user }) => {
       .then(async (res) => {
         setSubmitButtonDisabled(false);
 
-        navigate("/");
+        navigate("/rooms");
         console.log(res);
       })
       .catch((err) => {

@@ -18,11 +18,10 @@ const Transactions = () => {
     const q = query(collectionRef, where("tenantId", "==", params.id));
 
     onSnapshot(q, (snapshot) => {
-      console.log(snapshot.docs);
+      //console.log(snapshot.docs);
       setTransactions(
         snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
-      
     });
   };
 
