@@ -10,7 +10,7 @@ function Header({ user }) {
     <Navbar bg="dark" data-bs-theme="dark">
       <Container>
         <Navbar.Brand
-          href="/"
+          href="/rooms"
           style={{
             position: "static",
             height: "100%",
@@ -20,13 +20,6 @@ function Header({ user }) {
           Tenants
         </Navbar.Brand>
         <Nav className="me-auto" style={{ width: "100%" }}>
-          
-          
-          <Nav.Link as={Link} to="/rooms/:id">
-            View Tenants
-          </Nav.Link>
-
-
 
           <Nav.Link as={Link} to="/rooms/new">
             New Room
