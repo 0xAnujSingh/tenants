@@ -22,9 +22,9 @@ class RoomService {
     );
   };
 
-  updateRoom = (id, updateRoom) => {
+  updateRoom = (id, attributes) => {
     const roomDoc = doc(db, "Rooms", id);
-    return updateDoc(roomDoc, updateRoom);
+    return updateDoc(roomDoc, attributes);
   };
 
   deleteRoom = (id) => {

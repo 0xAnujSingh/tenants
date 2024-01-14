@@ -5,8 +5,7 @@ import TransactionService from "./TransactionService";
 
 import { onSnapshot, query, where } from "firebase/firestore";
 
-const Transactions = () => {
-  const params = useParams();
+const Transactions = ({ tenantId }) => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
@@ -15,7 +14,7 @@ const Transactions = () => {
 
   const getAllTransaction = async () => {
     const collectionRef = TransactionService.ref();
-    const q = query(collectionRef, where("tenantId", "==", params.id));
+    const q = query(collectionRef, where("tenantId", "==", tenantId));
 
     onSnapshot(q, (snapshot) => {
       //console.log(snapshot.docs);
@@ -27,7 +26,6 @@ const Transactions = () => {
 
   return (
     <div>
-      Transactions ......{params.id}
       <div>
         <Container>
           <Table>

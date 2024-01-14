@@ -16,16 +16,14 @@ function ViewTenant({ tenant }) {
 
 const AddNewTenant = () => {
   const params = useParams();
-  //console.log(params.id);
+  
 
   const [room, setRoom] = useState({});
 
-  //console.log(room);
   const [existingTenant, setExistingTenant] = useState();
 
   const outlet = useOutletContext();
-  //console.log(outlet);
-
+  
   const [tenantData, setTenantData] = useState({
     dateOfJoining: "",
   });
@@ -87,7 +85,7 @@ const AddNewTenant = () => {
         return;
       }
 
-      console.log(snapshot.docs.map((doc) => doc.data()));
+      //console.log(snapshot.docs.map((doc) => doc.data()));
 
       const req = snapshot.docs[0].data();
       req.id = snapshot.docs[0].id;
@@ -100,8 +98,8 @@ const AddNewTenant = () => {
     //   setRoom(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     // });
     const data = await RoomService.getRoomById(params.id);
-    console.log(params.id);
-    console.log(data.data());
+    
+    //console.log(data.data());
     setRoom(data.data());
   };
 
@@ -113,38 +111,10 @@ const AddNewTenant = () => {
       }}
     >
       {/* <p>{JSON.stringify(existingTenant)}</p> */}
-      <Card>
+      { !existingTenant && <Card>
         <Card.Body>
           <Card.Title>Apply to join</Card.Title>
-          <small>{params.id}</small>
-          <div>
-            <small>RoomNo :</small>
-            {room.RoomNo}
-          </div>
-          <div>
-            <small>Rent :</small>
-            {room.Rent}
-          </div>
-          <div>
-            <small>Unit :</small>
-            {room.Unit}
-          </div>
-          <div>
-            <small>Address :</small>
-            {room.Address}
-          </div>
-          <div>
-            <small>Windows :</small>
-            {room.Windows}
-          </div>
-          <div>
-            <small>RoomSize :</small>
-            {room.RoomSize}
-          </div>
-        </Card.Body>
-        {!existingTenant && (
-          <Card.Footer className="text-muted">
-            <FormGroup>
+          <FormGroup>
               <Label for="examplePassword"> Date Of Joining </Label>
               <Input
                 id="DateOfJoining"
@@ -156,9 +126,8 @@ const AddNewTenant = () => {
               />
             </FormGroup>
             <Button onClick={submitData}>Submit</Button>
-          </Card.Footer>
-        )}
-      </Card>
+        </Card.Body>
+      </Card> }
       {existingTenant && existingTenant.state === 'requested' && (
         <Alert variant="success" style={{ marginTop: "8px" }}>
           Already {existingTenant.state}
