@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Container, Table } from "react-bootstrap";
-import { useParams } from "react-router-dom";
 import TransactionService from "./TransactionService";
 
-import { onSnapshot, query, where } from "firebase/firestore";
+import { onSnapshot, orderBy, query, where } from "firebase/firestore";
 
 const Transactions = ({ tenantId }) => {
   const [transactions, setTransactions] = useState([]);
@@ -14,7 +13,11 @@ const Transactions = ({ tenantId }) => {
 
   const getAllTransaction = async () => {
     const collectionRef = TransactionService.ref();
-    const q = query(collectionRef, where("tenantId", "==", tenantId));
+    const q = query(
+      collectionRef,
+      where("tenantId", "==", tenantId),
+      orderBy("date", "desc")
+    );
 
     onSnapshot(q, (snapshot) => {
       //console.log(snapshot.docs);
@@ -31,27 +34,24 @@ const Transactions = ({ tenantId }) => {
           <Table>
             <thead>
               <tr>
-                <th>Name</th>
-
                 <th>Type</th>
                 <th>Quantity</th>
                 <th>Item</th>
                 <th>Date</th>
-                <th>Amount</th>
                 <th>Price</th>
+                <th>Amount</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((trans) => {
                 return (
-                  <tr>
-                    <td>{trans.tenantName}</td>
+                  <tr key={trans.id}>
                     <td>{trans.type}</td>
                     <td>{trans.quantity}</td>
                     <td>{trans.item}</td>
                     <td>{trans.date.toDate().toDateString()}</td>
-                    <td>{trans.amount}</td>
-                    <td>{trans.price}</td>
+                    <td>₹{trans.price}</td>
+                    <td>₹{trans.amount}</td>
                   </tr>
                 );
               })}
