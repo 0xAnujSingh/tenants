@@ -9,7 +9,6 @@ import { db } from "../firebase";
 
 const ViewRequests = ({ roomId }) => {
   const [requests, setRequests] = useState([]);
-    //console.log(requests);
 
   useEffect(() => {
     getAllRequests();
@@ -23,7 +22,7 @@ const ViewRequests = ({ roomId }) => {
   };
 
   const handleAccept = async (request) => {
-    console.log(request)
+    console.log(request);
     if (request.state !== "requested") {
       alert("Only applications in requested state can be accepted");
       return;
