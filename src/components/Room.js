@@ -30,23 +30,23 @@ export function RoomCard({ room }) {
         <Card.Title>Room</Card.Title>
         <small>{room.id}</small>
         <div>
-          <small>RoomNo :</small>
+          <small>RoomNo: </small>
           {room.RoomNo}
         </div>
         <div>
-          <small>Rent :</small>
+          <small>Rent: </small>
           {room.Rent}
         </div>
         <div>
-          <small>Unit :</small>
+          <small>Unit: </small>
           {room.Unit}
         </div>
         <div>
-          <small>Address :</small>
+          <small>Address: </small>
           {room.Address}
         </div>
         <div>
-          <small>Windows :</small>
+          <small>Windows: </small>
           {room.Windows}
         </div>
         <div>
@@ -55,7 +55,7 @@ export function RoomCard({ room }) {
         </div>
 
         <div>
-          <small>RoomSize :</small>
+          <small>RoomSize: </small>
           {room.RoomSize}
         </div>
       </Card.Body>
@@ -69,83 +69,39 @@ function TenantCard({ tenant }) {
       <Card.Body>
         <Card.Title>Tenant</Card.Title>
         <small>{tenant.id}</small>
+        <p>{tenant.userName}</p>
+        <p>Balance: ₹{tenant.balance}</p>
       </Card.Body>
     </Card>
   );
 }
 
-function TenantActions({ tenant }) {
-  const outlet = useOutletContext();
-  const navigate = useNavigate();
-
-  function handlePaybill(tenant) {
-    const Billpay = Number(prompt("Enter paying Amount"));
-    const newBalance = tenant.Balance - Billpay;
-    const newData = Object.assign({}, tenant);
-    newData.Balance = newBalance;
-    TenantDataService.updateTenant(tenant.id, newData);
-
-    const dbRef = collection(db, "Transactions");
-    const transaction = {
-      item: "payment",
-      quantity: 1,
-      type: "Credit",
-      price: Billpay,
-      amount: Billpay,
-      tenantId: tenant.id,
-      tenantName: tenant.Name,
-    };
-
-    TransactionService.addTransaction(dbRef, transaction);
-  }
-
-  //   const handleDelete = async (id) => {
-  //     await TenantDataService.deleteTenant(id);
-  //     getTenant();
-  //   };
-
-  //   const getTenant = async () => {
-  //     const q = query(
-  //       TenantDataService.ref(),
-  //       where("Owner", "==", outlet.user.uid)
-  //     );
-  //     onSnapshot(q, (snapshot) => {
-  //       // if (!snapshot) { return; }
-  //       //console.log(snapshot.docs);
-  //       setTenants(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //     });
-  //     // const data = await TenantDataService.getAllTenants();
-  //   };
-
-  const handleTransactions = async (id) => {
-    const data = await TenantDataService.getTenantById(id);
-    console.log(data.data());
-
-    navigate(`/transactions/${id}`, { state: { transactions: data.data() } });
-  };
-
-  return (
-    <div>
-      <p>{tenant.roomId}</p>
-    </div>
-  );
-}
-
-function RoomOwnerActions({ updateUnit, generateRent }) {
+function RoomOwnerActions({ room, updateUnit, generateRent }) {
   function handleUpdateUnit() {
     const newUnit = Number(prompt("Enter New Unit"));
+
+    if (newUnit <= room.Unit) {
+      alert("Unit cannot be less than or equal to existing unit");
+      return;
+    }
 
     return updateUnit(newUnit);
   }
   function handleGenerateRent() {
     //const newUnit = Number(prompt("Enter Number Of Months"));
 
-    return generateRent(2);
+    return generateRent(1);
   }
+
   return (
     <div>
-      <Button onClick={() => handleUpdateUnit()}>Update Unit</Button>
-      <Button onClick={() => handleGenerateRent()}>Generate Rent</Button>
+      <Button onClick={() => handleUpdateUnit()} color="primary">
+        Update Unit
+      </Button>
+      &nbsp;
+      <Button onClick={() => handleGenerateRent()} color="primary">
+        Generate Rent
+      </Button>
     </div>
   );
 }
@@ -157,27 +113,23 @@ const Room = () => {
 
   const outlet = useOutletContext();
 
-  const [tenantData, setTenantData] = useState({
-    dateOfJoining: "",
-  });
-
   // we direct use onSnapshot in useEffect to terminate the eventlistner
   useEffect(() => {
     getByRoomId(params.id);
   }, []);
 
-  const getByRoomId = async () => {
-    // onSnapshot(RoomService.ref(), (snapshot) => {
-    //   setRoom(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    // });
-    const data = await RoomService.getRoomById(params.id);
-
+  const getByRoomId = async (roomId) => {
+    const data = await RoomService.getRoomById(roomId);
     const tenantId = data.get("TenantId");
 
     if (tenantId) {
       const tenant = await TenantDataService.getTenantById(tenantId);
+
+      // tenant.data() will not gave us id i.e why id:tenant.id we set
       setExistingTenant({ id: tenant.id, ...tenant.data() });
     }
+
+    // data.data() will not gave us id i.e why id:data.id we set
     setRoom({ id: data.id, ...data.data() });
   };
 
@@ -196,11 +148,11 @@ const Room = () => {
   function updateUnit(newUnit) {
     const newBalance = increment((newUnit - room.Unit) * 10);
 
-    TenantDataService.updateTenant(existingTenant.id, { Balance: newBalance });
+    TenantDataService.updateTenant(existingTenant.id, { balance: newBalance });
     RoomService.updateRoom(existingTenant.roomId, { Unit: newUnit });
     const dbRef = collection(db, "Transactions");
 
-    const quantity = newUnit - existingTenant.Unit;
+    const quantity = newUnit - room.Unit;
     const price = 10;
     const transaction = {
       item: "electricity",
@@ -213,6 +165,7 @@ const Room = () => {
     };
     TransactionService.addTransaction(dbRef, transaction);
     toast.success(`Unit updated to ${newUnit}`);
+    getByRoomId(params.id);
   }
 
   function generateRent(noOfMonths) {
@@ -245,6 +198,50 @@ const Room = () => {
     TransactionService.addTransaction(dbRef, transaction);
 
     toast.success(`Rent added for ${noOfMonths} months`);
+    getByRoomId(params.id);
+  }
+
+  function TenantActions({ tenant }) {
+    function handlePayBill() {
+      const billAmount = Number(prompt("Enter how you pay"));
+      if (billAmount <= 0) {
+        alert("Balance should not be equal to 0");
+        return;
+      }
+      TenantDataService.updateTenant(tenant.id, {
+        balance: increment(-1 * billAmount),
+      });
+      const dbRef = collection(db, "Transactions");
+      const transaction = {
+        item: "balance",
+        quantity: 1,
+        type: "Credit",
+        price: billAmount,
+        amount: billAmount,
+        tenantId: existingTenant.id,
+        tenantName: existingTenant.userName,
+      };
+      TransactionService.addTransaction(dbRef, transaction);
+      toast.success(`Payment sucessfull of amount ${tenant.balance}`);
+      getByRoomId(params.id);
+    }
+    function handleLeave() {
+      const endDate = new Date(prompt("When you want to leave"));
+      let newDate = new Date();
+      if (endDate < newDate || "Invalid Date") {
+        alert("Please enter a valid Date");
+        return;
+      }
+    }
+
+    return (
+      <div>
+        <div style={{ float: "right", display: "inline" }}>
+          <Button onClick={() => handlePayBill()}>Pay Bill</Button>&nbsp;
+          <Button onClick={() => handleLeave()}>Request to leave</Button>
+        </div>
+      </div>
+    );
   }
 
   if (!outlet.user.uid) {
@@ -252,11 +249,11 @@ const Room = () => {
   }
 
   return (
-    <Container style={{ marginTop: '8px'}}>
+    <Container style={{ marginTop: "8px" }}>
       <Row>
         <Col xs={12} lg={3}>
           <RoomCard room={room} />
-          <br/>
+          <br />
           {room.TenantId && <TenantCard tenant={existingTenant} />}
         </Col>
         <Col xs={12} lg={8}>
@@ -270,22 +267,28 @@ const Room = () => {
           {isRoomOwner() && !room.TenantId && (
             <ViewRequests roomId={params.id} />
           )}
-          
+
           {!isRoomOwner() && !room.TenantId && <AddNewTenant />}
+
           {isRoomTenant() && <TenantActions tenant={existingTenant} />}
-          { room.TenantId && <div>
+
+          {room.TenantId && (
             <div>
-            <h2 style={{ display: 'inline' }}>Transactions</h2>
-            <div style={{ float: 'right', display: 'inline' }}>
-            {isRoomOwner() && room.TenantId && (
-            <RoomOwnerActions
-              updateUnit={(unit) => updateUnit(unit)}
-              generateRent={(months) => generateRent(months)}
-            />
-          )}
-          </div>
+              <div>
+                <h2 style={{ display: "inline" }}>Transactions</h2>
+                <div style={{ float: "right", display: "inline" }}>
+                  {isRoomOwner() && room.TenantId && (
+                    <RoomOwnerActions
+                      room={room}
+                      updateUnit={(unit) => updateUnit(unit)}
+                      generateRent={(months) => generateRent(months)}
+                    />
+                  )}
+                </div>
+              </div>
+              <Transactions tenantId={room.TenantId} />
             </div>
-            <Transactions tenantId={room.TenantId} /> </div> }
+          )}
         </Col>
       </Row>
     </Container>
