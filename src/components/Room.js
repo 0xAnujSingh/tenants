@@ -22,6 +22,7 @@ import TransactionService from "./TransactionService";
 import ViewTenants from "./ViewTenants";
 import { toast } from "react-hot-toast";
 import Transactions from "./Transactions";
+import LeaveRoomModal from "./LeaveRoomModal";
 
 export function RoomCard({ room }) {
   return (
@@ -106,7 +107,7 @@ function RoomOwnerActions({ room, updateUnit, generateRent }) {
   );
 }
 
-const Room = () => {
+const Room = () => {         
   const params = useParams();
   const [room, setRoom] = useState({});
   const [existingTenant, setExistingTenant] = useState();
@@ -202,6 +203,8 @@ const Room = () => {
   }
 
   function TenantActions({ tenant }) {
+    const [showModal, setModalVisibility] = useState(false);
+
     function handlePayBill() {
       const billAmount = Number(prompt("Enter how you pay"));
       if (billAmount <= 0) {
@@ -225,20 +228,26 @@ const Room = () => {
       toast.success(`Payment sucessfull of amount ${tenant.balance}`);
       getByRoomId(params.id);
     }
-    function handleLeave() {
-      const endDate = new Date(prompt("When you want to leave"));
-      let newDate = new Date();
-      if (endDate < newDate || "Invalid Date") {
-        alert("Please enter a valid Date");
-        return;
-      }
+
+
+    async function handleSave(endDate) {
+      await TenantDataService.updateTenant(tenant.id, { endDate });
+
+      setModalVisibility(false);
     }
 
     return (
       <div>
         <div style={{ float: "right", display: "inline" }}>
           <Button onClick={() => handlePayBill()}>Pay Bill</Button>&nbsp;
-          <Button onClick={() => handleLeave()}>Request to leave</Button>
+          <LeaveRoomModal
+            show={showModal}
+            handleClose={() => setModalVisibility(false)}
+            handleSave={handleSave}
+          />
+          <Button onClick={() => setModalVisibility(true)}>
+            Request to leave
+          </Button>
         </div>
       </div>
     );

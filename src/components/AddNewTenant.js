@@ -16,14 +16,10 @@ function ViewTenant({ tenant }) {
 
 const AddNewTenant = () => {
   const params = useParams();
-  
-
   const [room, setRoom] = useState({});
-
   const [existingTenant, setExistingTenant] = useState();
 
   const outlet = useOutletContext();
-  
   const [tenantData, setTenantData] = useState({
     dateOfJoining: "",
   });

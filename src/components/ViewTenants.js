@@ -10,7 +10,7 @@ import { collection } from "firebase/firestore";
 
 const ViewTenants = () => {
   const [tenants, setTenants] = useState([]);
-
+  
   const navigate = useNavigate();
   const outlet = useOutletContext();
   //const Unit = (tenant.PresentUnit - tenant.PreviousUnit) * 9;

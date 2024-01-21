@@ -27,7 +27,11 @@ const ViewRooms = () => {
   return (
     <div>
       <Container>
-        { rooms.map(room => <Link style={{ textDecoration: 'none' }} to={`/rooms/${room.id}`}><RoomCard room={room} /></Link>) }
+        {rooms.map((room) => (
+          <Link style={{ textDecoration: "none" }} to={`/rooms/${room.id}`}>
+            <RoomCard room={room} />
+          </Link>
+        ))}
       </Container>
     </div>
   );

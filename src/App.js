@@ -14,7 +14,6 @@ import Room from "./components/Room";
 
 const App = () => {
   const [user, setUser] = useState(undefined); // undefined | null | User
-  //console.log(user)
 
   useEffect(() => {
     onAuthStateChanged(getAuth(), setUser);
@@ -29,11 +28,14 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route element={<PrivateRoutes user={user} />}>
-            <Route path="/" element={<Data />}></Route>
+            <Route path="/" element={<ViewRooms />}></Route>
             <Route path="/transactions/:id" element={<Transactions />}></Route>
             <Route path="/rooms/new" element={<NewRoom />}></Route>
             <Route path="/rooms/:id/tenant" element={<AddNewTenant />}></Route>
-            <Route path="/rooms/:id/requests" element={<ViewRequests />}></Route>
+            <Route
+              path="/rooms/:id/requests"
+              element={<ViewRequests />}
+            ></Route>
             <Route path="/rooms/:id" element={<Room />}></Route>
             <Route path="/rooms" element={<ViewRooms />}></Route>
           </Route>
